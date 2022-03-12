@@ -8,8 +8,8 @@ library(stringr)
 # Create a Dash app
 app <- Dash$new(external_stylesheets = "https://codepen.io/chriddyp/pen/bWLwgP.css")
 
-cherry_df <- read.csv("data/street-trees.csv", sep = ";") |>
-  mutate("DIAMETER_CM" = DIAMETER * 2.54) |>
+cherry_df <- read.csv("data/street-trees.csv", sep = ";") %>%
+  mutate("DIAMETER_CM" = DIAMETER * 2.54) %>%
   filter(GENUS_NAME == "PRUNUS" & DIAMETER_CM > 0 & DIAMETER_CM <= 150)
 
 
@@ -21,7 +21,7 @@ app %>% set_layout(
     dccDropdown(
       id = 'nb_select',
       value = 'All neighbourhoods',
-      options = (c(unique(cherry_df$NEIGHBOURHOOD_NAME), 'All neighbourhoods')) |>
+      options = (c(unique(cherry_df$NEIGHBOURHOOD_NAME), 'All neighbourhoods')) %>%
         map(function(item) list(label = item, value = item)),
       ),
     dccGraph(id='plot-area')
@@ -34,7 +34,7 @@ app$callback(
   function(nb) {
     
   if (nb != 'All neighbourhoods') {
-    cherry_df <- cherry_df |>
+    cherry_df <- cherry_df %>%
       filter(NEIGHBOURHOOD_NAME == nb)
   }
     
@@ -52,4 +52,4 @@ app$callback(
 # Run the app
 app %>% run_app()
 
-app$run_server(debug = T)
+app$run_server(host = '0.0.0.0')
