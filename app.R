@@ -12,7 +12,8 @@ cherry_df <- read.csv("data/street-trees.csv", sep = ";") %>%
   mutate("DIAMETER_CM" = DIAMETER * 2.54) %>%
   filter(GENUS_NAME == "PRUNUS" & DIAMETER_CM > 0 & DIAMETER_CM <= 150)
 
-nb_list <- c(unique(cherry_df$NEIGHBOURHOOD_NAME), 'All neighbourhoods')
+nb_list <- c(unique(cherry_df$NEIGHBOURHOOD_NAME), 'All neighbourhoods') %>%
+  sort()
 
 # new_list <- map(nb_list, function(item) list(label = item, value = item))
 
@@ -30,7 +31,7 @@ app %>% set_layout(
     dccDropdown(
       id = 'nb_select',
       value = 'All neighbourhoods',
-      options = nb_opts,
+      options = nb_list,
       ),
     dccGraph(id='plot-area')
   ))
