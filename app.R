@@ -22,7 +22,7 @@ app %>% set_layout(
       id = 'nb_select',
       value = 'All neighbourhoods',
       options = (c(unique(cherry_df$NEIGHBOURHOOD_NAME), 'All neighbourhoods')) %>%
-        map(function(item) list(label = item, value = item)),
+        purrr::map(function(item) list(label = item, value = item)),
       ),
     dccGraph(id='plot-area')
   ))
@@ -50,3 +50,4 @@ app$callback(
 
 
 app$run_server(host = '0.0.0.0')
+#app$run_server(debug = T)
