@@ -22,10 +22,19 @@ cherry_diam <- ggplot(cherry_df) +
 
 app %>% set_layout(
   h1('Cherry tree diameter'),
-  div('Here you can see cherry tree diameters by size'),
-  dccGraph(figure=ggplotly(cherry_diam, tooltip = c(""))
+  div(
+    list(
+    div('Here you can see cherry tree diameters by size'),
+    dccDropdown(
+      options = list(list(label = "New York City", value = "NYC"),
+                     list(label = "Montreal", value = "MTL"),
+                     list(label = "San Francisco", value = "SF")),
+      value = 'MTL'),
+    dccGraph(figure=ggplotly(cherry_diam, tooltip = c(""))
+  ))
   )
 )
+
 
 # Run the app
 app %>% run_app()
