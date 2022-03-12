@@ -12,6 +12,15 @@ cherry_df <- read.csv("data/street-trees.csv", sep = ";") %>%
   mutate("DIAMETER_CM" = DIAMETER * 2.54) %>%
   filter(GENUS_NAME == "PRUNUS" & DIAMETER_CM > 0 & DIAMETER_CM <= 150)
 
+nb_list <- c(unique(cherry_df$NEIGHBOURHOOD_NAME), 'All neighbourhoods')
+
+# new_list <- map(nb_list, function(item) list(label = item, value = item))
+
+nb_opts <- c()
+for(i in nb_list) {
+  new_value <- list(list(label = i, value = i))
+  nb_opts <- c(nb_opts, new_value)
+}
 
 app %>% set_layout(
   div(id = 'main-container',
@@ -21,8 +30,7 @@ app %>% set_layout(
     dccDropdown(
       id = 'nb_select',
       value = 'All neighbourhoods',
-      options = (c(unique(cherry_df$NEIGHBOURHOOD_NAME), 'All neighbourhoods')) %>%
-        purrr::map(function(item) list(label = item, value = item)),
+      options = nb_opts,
       ),
     dccGraph(id='plot-area')
   ))
@@ -50,4 +58,4 @@ app$callback(
 
 
 app$run_server(host = '0.0.0.0')
-#app$run_server(debug = T)
+# app$run_server(debug = T)
