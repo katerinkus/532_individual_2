@@ -3,14 +3,15 @@ library(dplyr)
 library(ggplot2)
 library(plotly)
 library(purrr)
+library(stringr)
 
 # Create a Dash app
 app <- Dash$new(external_stylesheets = "https://codepen.io/chriddyp/pen/bWLwgP.css")
 
 cherry_df <- read.csv("data/street-trees.csv", sep = ";") |>
   mutate("DIAMETER_CM" = DIAMETER * 2.54) |>
-  filter(GENUS_NAME == "PRUNUS" & DIAMETER_CM > 0 & DIAMETER_CM <= 150) |>
-  filter(NEIGHBOURHOOD_NAME == "DOWNTOWN")
+  filter(GENUS_NAME == "PRUNUS" & DIAMETER_CM > 0 & DIAMETER_CM <= 150)
+
 
 cherry_diam <- ggplot(cherry_df) +
   aes(x = DIAMETER_CM) +
@@ -26,10 +27,11 @@ app %>% set_layout(
     list(
     div('Here you can see cherry tree diameters by size'),
     dccDropdown(
-      options = list(list(label = "New York City", value = "NYC"),
-                     list(label = "Montreal", value = "MTL"),
-                     list(label = "San Francisco", value = "SF")),
-      value = 'MTL'),
+      id = 'nb_select',
+      value = 'All Neighbourhoods',
+      options = str_to_title(c(unique(cherry_df$NEIGHBOURHOOD_NAME), 'All neighbourhoods')) |>
+        map(function(item) list(label = item, value = item)),
+      ),
     dccGraph(figure=ggplotly(cherry_diam, tooltip = c(""))
   ))
   )
